@@ -72,7 +72,12 @@ Ypu have a good working knowledge of R, and be familiar with basic data wranglin
 
 # {background-color="#CA225E"}
 
-<center>github.com/topepo/2024_SSA_SCV</center>
+<center>sources: https://github.com/topepo/2024_SSA_SCV</center>
+
+<br>
+
+<center>slides: https://topepo.github.io/2024_SSA_SCV</center>
+
 
 # What is tidymodels? {background-color="#CA225E"}
 

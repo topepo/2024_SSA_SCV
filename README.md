@@ -1,4 +1,4 @@
-> Tutorial 1: Mar 26, 9:00-12:30
+> Tutorial 1: Mar 26, 9:00-12:30 AEDT (6:00pm to 9:30pm EST)
 > Title: Introduction to Machine Learning with tidymodels
 > Presenter: Max Kuhn
 > This is for data scientists wanting to improve their modeling skills, and gain a better understanding of machine learning models. 
@@ -9,3 +9,10 @@
 > 
 > The tutorial will follow selected materials from https://www.tidymodels.org/ and  https://www.tmwr.org/ and will be made available a few days prior to the tutorial.
 
+To prepare, you’ll need to do a few package installs: 
+
+```r
+install.packages(c("Cubist", "tidymodels", "rules"))
+```
+
+At the time of this tutorial, we have been in the process of releasing a lot of packages. It’s alright if you have the previous versions though.
