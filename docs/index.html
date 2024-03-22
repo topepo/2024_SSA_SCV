@@ -7,7 +7,12 @@
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<meta name="shinylive:serviceworker_dir" content=".">
+<script src="site_libs/quarto-contrib/shinylive-0.2.3/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="site_libs/quarto-contrib/shinylive-0.2.3/shinylive/run-python-blocks.js" type="module"></script>
+<link href="site_libs/quarto-contrib/shinylive-0.2.3/shinylive/shinylive.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.5.4">
 
   <meta name="author" content="Max Kuhn and Simon Couch">
@@ -863,12 +868,11 @@ github.com/topepo/2024_SSA_SCV
 <p>We typically start by splitting the data into partitions used for modeling and assessment:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">set.seed</span>(<span class="dv">991</span>)</span>
-<span id="cb12-2"><a></a>delivery_split <span class="ot">&lt;-</span></span>
-<span id="cb12-3"><a></a>  <span class="fu">initial_split</span>(deliveries, <span class="at">prop =</span> <span class="fl">0.75</span>, <span class="at">strata =</span> time_to_delivery)</span>
+<span id="cb12-2"><a></a>delivery_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(deliveries, <span class="at">prop =</span> <span class="fl">0.75</span>, <span class="at">strata =</span> time_to_delivery)</span>
+<span id="cb12-3"><a></a></span>
 <span id="cb12-4"><a></a></span>
-<span id="cb12-5"><a></a></span>
-<span id="cb12-6"><a></a>delivery_train <span class="ot">&lt;-</span> <span class="fu">training</span>(delivery_split)</span>
-<span id="cb12-7"><a></a>delivery_test  <span class="ot">&lt;-</span> <span class="fu">testing</span>(delivery_split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-5"><a></a>delivery_train <span class="ot">&lt;-</span> <span class="fu">training</span>(delivery_split)</span>
+<span id="cb12-6"><a></a>delivery_test  <span class="ot">&lt;-</span> <span class="fu">testing</span>(delivery_split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><br></p>
 <p><br></p>
@@ -876,16 +880,15 @@ github.com/topepo/2024_SSA_SCV
 </section>
 <section id="splitting-the-data-with-validation" class="slide level2">
 <h2>Splitting the data (with validation)</h2>
-<p>Instead, let’s do a 3-way split to include a validation set:</p>
+<p>Instead, let’s do a 3-way split to include a validation set that we can use <em>before</em> the test set:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">set.seed</span>(<span class="dv">991</span>)</span>
-<span id="cb13-2"><a></a>delivery_split <span class="ot">&lt;-</span></span>
-<span id="cb13-3"><a></a>  <span class="fu">initial_validation_split</span>(deliveries, <span class="at">prop =</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.1</span>), </span>
-<span id="cb13-4"><a></a>                           <span class="at">strata =</span> time_to_delivery)</span>
-<span id="cb13-5"><a></a></span>
-<span id="cb13-6"><a></a>delivery_train <span class="ot">&lt;-</span> <span class="fu">training</span>(delivery_split)</span>
-<span id="cb13-7"><a></a>delivery_test  <span class="ot">&lt;-</span> <span class="fu">testing</span>(delivery_split)</span>
-<span id="cb13-8"><a></a>delivery_val   <span class="ot">&lt;-</span> <span class="fu">validation</span>(delivery_split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13" data-code-line-numbers="2,3,7|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">set.seed</span>(<span class="dv">991</span>)</span>
+<span id="cb13-2"><a></a>delivery_split <span class="ot">&lt;-</span> <span class="fu">initial_validation_split</span>(deliveries, <span class="at">prop =</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.1</span>), </span>
+<span id="cb13-3"><a></a>                                           <span class="at">strata =</span> time_to_delivery)</span>
+<span id="cb13-4"><a></a></span>
+<span id="cb13-5"><a></a>delivery_train <span class="ot">&lt;-</span> <span class="fu">training</span>(delivery_split)</span>
+<span id="cb13-6"><a></a>delivery_test  <span class="ot">&lt;-</span> <span class="fu">testing</span>(delivery_split)</span>
+<span id="cb13-7"><a></a>delivery_val   <span class="ot">&lt;-</span> <span class="fu">validation</span>(delivery_split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><br></p>
 <p><br></p>
@@ -894,7 +897,7 @@ github.com/topepo/2024_SSA_SCV
 <section id="a-linear-model" class="slide level2">
 <h2>A linear model</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>mod_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>()</span>
+<div class="sourceCode cell-code" id="cb14" data-code-line-numbers="2|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>mod_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>()</span>
 <span id="cb14-2"><a></a>mod_fit <span class="ot">&lt;-</span> mod_spec <span class="sc">%&gt;%</span> <span class="fu">fit</span>(time_to_delivery <span class="sc">~</span> ., <span class="at">data =</span> delivery_train)</span>
 <span id="cb14-3"><a></a></span>
 <span id="cb14-4"><a></a><span class="fu">tidy</span>(mod_fit)</span>
@@ -917,7 +920,7 @@ github.com/topepo/2024_SSA_SCV
 <section id="a-linear-model-1" class="slide level2">
 <h2>A linear model</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="co"># Good: </span></span>
+<div class="sourceCode cell-code" id="cb15" data-code-line-numbers="2|11|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="co"># Good: </span></span>
 <span id="cb15-2"><a></a><span class="fu">predict</span>(mod_fit, <span class="fu">head</span>(delivery_val, <span class="dv">3</span>))</span>
 <span id="cb15-3"><a></a><span class="co">#&gt; # A tibble: 3 × 1</span></span>
 <span id="cb15-4"><a></a><span class="co">#&gt;   .pred</span></span>
@@ -927,13 +930,14 @@ github.com/topepo/2024_SSA_SCV
 <span id="cb15-8"><a></a><span class="co">#&gt; 3  20.2</span></span>
 <span id="cb15-9"><a></a></span>
 <span id="cb15-10"><a></a><span class="co"># Better:</span></span>
-<span id="cb15-11"><a></a><span class="fu">augment</span>(mod_fit, <span class="fu">head</span>(delivery_val, <span class="dv">3</span>)) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>)</span>
-<span id="cb15-12"><a></a><span class="co">#&gt; # A tibble: 3 × 7</span></span>
-<span id="cb15-13"><a></a><span class="co">#&gt;   .pred .resid time_to_delivery  hour day   distance item_01</span></span>
-<span id="cb15-14"><a></a><span class="co">#&gt;   &lt;dbl&gt;  &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;dbl&gt;   &lt;int&gt;</span></span>
-<span id="cb15-15"><a></a><span class="co">#&gt; 1  12.4   5.62             18.0  12.1 Tue       2.4        0</span></span>
-<span id="cb15-16"><a></a><span class="co">#&gt; 2  27.2   4.31             31.5  16.5 Sat       2.57       0</span></span>
-<span id="cb15-17"><a></a><span class="co">#&gt; 3  20.2  -2.42             17.8  13.2 Fri       2.74       0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-11"><a></a><span class="fu">augment</span>(mod_fit, <span class="fu">head</span>(delivery_val, <span class="dv">3</span>)) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>)</span>
+<span id="cb15-12"><a></a><span class="co">#&gt; # A tibble: 3 × 9</span></span>
+<span id="cb15-13"><a></a><span class="co">#&gt;   .pred .resid time_to_delivery  hour day   distance item_01 item_02</span></span>
+<span id="cb15-14"><a></a><span class="co">#&gt;   &lt;dbl&gt;  &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;dbl&gt;   &lt;int&gt;   &lt;int&gt;</span></span>
+<span id="cb15-15"><a></a><span class="co">#&gt; 1  12.4   5.62             18.0  12.1 Tue       2.4        0       0</span></span>
+<span id="cb15-16"><a></a><span class="co">#&gt; 2  27.2   4.31             31.5  16.5 Sat       2.57       0       0</span></span>
+<span id="cb15-17"><a></a><span class="co">#&gt; 3  20.2  -2.42             17.8  13.2 Fri       2.74       0       0</span></span>
+<span id="cb15-18"><a></a><span class="co">#&gt; # ℹ 1 more variable: item_03 &lt;int&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="does-it-work" class="slide level2">
@@ -955,7 +959,7 @@ github.com/topepo/2024_SSA_SCV
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-right">
 <figure>
-<p><img data-src="index_files/figure-revealjs/lm-cal-plot-1.png" class="quarto-figure quarto-figure-right" style="width:100.0%"></p>
+<p><img data-src="figures/lm-cal-plot-1.svg" class="quarto-figure quarto-figure-right" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -996,14 +1000,37 @@ github.com/topepo/2024_SSA_SCV
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>food_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(time_to_delivery <span class="sc">~</span> ., <span class="at">data =</span> delivery_train)</span>
 <span id="cb18-2"><a></a>food_rec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>This first call just catalogs the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">summary</span>(food_rec)</span>
+<span id="cb19-2"><a></a><span class="co">#&gt; # A tibble: 31 × 4</span></span>
+<span id="cb19-3"><a></a><span class="co">#&gt;    variable type      role      source  </span></span>
+<span id="cb19-4"><a></a><span class="co">#&gt;    &lt;chr&gt;    &lt;list&gt;    &lt;chr&gt;     &lt;chr&gt;   </span></span>
+<span id="cb19-5"><a></a><span class="co">#&gt;  1 hour     &lt;chr [2]&gt; predictor original</span></span>
+<span id="cb19-6"><a></a><span class="co">#&gt;  2 day      &lt;chr [3]&gt; predictor original</span></span>
+<span id="cb19-7"><a></a><span class="co">#&gt;  3 distance &lt;chr [2]&gt; predictor original</span></span>
+<span id="cb19-8"><a></a><span class="co">#&gt;  4 item_01  &lt;chr [2]&gt; predictor original</span></span>
+<span id="cb19-9"><a></a><span class="co">#&gt;  5 item_02  &lt;chr [2]&gt; predictor original</span></span>
+<span id="cb19-10"><a></a><span class="co">#&gt;  6 item_03  &lt;chr [2]&gt; predictor original</span></span>
+<span id="cb19-11"><a></a><span class="co">#&gt;  7 item_04  &lt;chr [2]&gt; predictor original</span></span>
+<span id="cb19-12"><a></a><span class="co">#&gt;  8 item_05  &lt;chr [2]&gt; predictor original</span></span>
+<span id="cb19-13"><a></a><span class="co">#&gt;  9 item_06  &lt;chr [2]&gt; predictor original</span></span>
+<span id="cb19-14"><a></a><span class="co">#&gt; 10 item_07  &lt;chr [2]&gt; predictor original</span></span>
+<span id="cb19-15"><a></a><span class="co">#&gt; # ℹ 21 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="converting-to-indicator-variables" class="slide level2">
 <h2>Converting to indicator variables</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>food_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(time_to_delivery <span class="sc">~</span> ., <span class="at">data =</span> delivery_train) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-2"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_factor_predictors</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20" data-code-line-numbers="2|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>food_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(time_to_delivery <span class="sc">~</span> ., <span class="at">data =</span> delivery_train) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_factor_predictors</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><code>day_Tue</code> - <code>day_Sun</code></p>
+<p><br></p>
+<p>For any factor predictors, make binary indicators.</p>
+<p>There are <em>a lot</em> of recipe steps that can convert categorical predictors to numeric columns (<a href="https://www.tmwr.org/categorical" target="_blank">TMwR</a>).</p>
+<p>The new columns for <code>day</code> will have default names of <code>day_Tue</code> - <code>day_Sun</code>.</p>
+<p><br></p>
+<p>There are many types of recipe selectors.</p>
 </section>
 <section id="splines-are-the-best" class="slide level2">
 <h2>Splines are the best</h2>
@@ -1016,33 +1043,203 @@ github.com/topepo/2024_SSA_SCV
 <p>We’ll focus on <em>natural splines</em>.</p>
 <p>(<a href="https://www.tmwr.org/recipes#spline-functions" target="_blank">TMwR</a>)</p>
 </section>
+<section id="section-2" class="slide level2">
+<h2></h2>
+<div class="sourceCode" id="cb21" data-engine="r"><pre class="sourceCode numberSource shinylive-r number-lines code-with-copy"><code class="sourceCode"><span id="cb21-1"><a></a>#| label: fig-natural-spline</span>
+<span id="cb21-2"><a></a>#| viewerHeight: 600</span>
+<span id="cb21-3"><a></a>#| viewerWidth: "100%"</span>
+<span id="cb21-4"><a></a>#| standalone: true</span>
+<span id="cb21-5"><a></a></span>
+<span id="cb21-6"><a></a></span>
+<span id="cb21-7"><a></a>library(shiny)</span>
+<span id="cb21-8"><a></a>library(patchwork)</span>
+<span id="cb21-9"><a></a>library(dplyr)</span>
+<span id="cb21-10"><a></a>library(tidyr)</span>
+<span id="cb21-11"><a></a>library(ggplot2)</span>
+<span id="cb21-12"><a></a>library(splines2)</span>
+<span id="cb21-13"><a></a>library(bslib)</span>
+<span id="cb21-14"><a></a>library(viridis)</span>
+<span id="cb21-15"><a></a>library(modeldata)</span>
+<span id="cb21-16"><a></a></span>
+<span id="cb21-17"><a></a>data(ames)</span>
+<span id="cb21-18"><a></a>ames$Sale_Price &lt;- log10(ames$Sale_Price)</span>
+<span id="cb21-19"><a></a></span>
+<span id="cb21-20"><a></a>ui &lt;- page_fillable(</span>
+<span id="cb21-21"><a></a>  theme = bs_theme(bg = "#fcfefe", fg = "#595959"),</span>
+<span id="cb21-22"><a></a>  padding = "1rem",</span>
+<span id="cb21-23"><a></a>  layout_columns(</span>
+<span id="cb21-24"><a></a>    fill = FALSE,</span>
+<span id="cb21-25"><a></a>    col_widths = breakpoints(sm = c(-3, 6, -3)),</span>
+<span id="cb21-26"><a></a>    sliderInput(</span>
+<span id="cb21-27"><a></a>      "spline_df",</span>
+<span id="cb21-28"><a></a>      label = "# Spline Terms",</span>
+<span id="cb21-29"><a></a>      min = 3L, max = 30L, step = 2L, value = 3L</span>
+<span id="cb21-30"><a></a>    ), # sliderInput</span>
+<span id="cb21-31"><a></a>  ), # layout_columns</span>
+<span id="cb21-32"><a></a>  layout_columns(</span>
+<span id="cb21-33"><a></a>    fill = FALSE,</span>
+<span id="cb21-34"><a></a>    col_widths = breakpoints(sm = c(-1, 10, -1)),</span>
+<span id="cb21-35"><a></a>    as_fill_carrier(plotOutput('spline'))</span>
+<span id="cb21-36"><a></a>  )         </span>
+<span id="cb21-37"><a></a>)</span>
+<span id="cb21-38"><a></a></span>
+<span id="cb21-39"><a></a>server &lt;- function(input, output, session) {</span>
+<span id="cb21-40"><a></a>  </span>
+<span id="cb21-41"><a></a>  light_bg &lt;- "#fcfefe" # from aml4td.scss</span>
+<span id="cb21-42"><a></a>  grid_theme &lt;- bs_theme(</span>
+<span id="cb21-43"><a></a>    bg = "#fcfefe", fg = "#595959"</span>
+<span id="cb21-44"><a></a>  )</span>
+<span id="cb21-45"><a></a>  </span>
+<span id="cb21-46"><a></a>  # ------------------------------------------------------------------------------</span>
+<span id="cb21-47"><a></a>  </span>
+<span id="cb21-48"><a></a>  theme_light_bl&lt;- function(...) {</span>
+<span id="cb21-49"><a></a>    </span>
+<span id="cb21-50"><a></a>    ret &lt;- ggplot2::theme_bw(...)</span>
+<span id="cb21-51"><a></a>    </span>
+<span id="cb21-52"><a></a>    col_rect &lt;- ggplot2::element_rect(fill = light_bg, colour = light_bg)</span>
+<span id="cb21-53"><a></a>    ret$panel.background  &lt;- col_rect</span>
+<span id="cb21-54"><a></a>    ret$plot.background   &lt;- col_rect</span>
+<span id="cb21-55"><a></a>    ret$legend.background &lt;- col_rect</span>
+<span id="cb21-56"><a></a>    ret$legend.key        &lt;- col_rect</span>
+<span id="cb21-57"><a></a>    </span>
+<span id="cb21-58"><a></a>    larger_x_text &lt;- ggplot2::element_text(size = rel(1.25))</span>
+<span id="cb21-59"><a></a>    larger_y_text &lt;- ggplot2::element_text(size = rel(1.25), angle = 90)</span>
+<span id="cb21-60"><a></a>    ret$axis.text.x &lt;- larger_x_text</span>
+<span id="cb21-61"><a></a>    ret$axis.text.y &lt;- larger_y_text</span>
+<span id="cb21-62"><a></a>    ret$axis.title.x &lt;- larger_x_text</span>
+<span id="cb21-63"><a></a>    ret$axis.title.y &lt;- larger_y_text  </span>
+<span id="cb21-64"><a></a>    </span>
+<span id="cb21-65"><a></a>    ret$legend.position &lt;- "top"</span>
+<span id="cb21-66"><a></a>    </span>
+<span id="cb21-67"><a></a>    ret</span>
+<span id="cb21-68"><a></a>  }</span>
+<span id="cb21-69"><a></a>  </span>
+<span id="cb21-70"><a></a>  col_rect &lt;- ggplot2::element_rect(fill = light_bg, colour = light_bg)</span>
+<span id="cb21-71"><a></a>  </span>
+<span id="cb21-72"><a></a>  maybe_lm &lt;- function(x) {</span>
+<span id="cb21-73"><a></a>    try(lm(y ~ poly(x, input$piecewise_deg), data = x), silent = TRUE)</span>
+<span id="cb21-74"><a></a>  }</span>
+<span id="cb21-75"><a></a>  </span>
+<span id="cb21-76"><a></a>  expansion_to_tibble &lt;- function(x, original, prefix = "term ") {</span>
+<span id="cb21-77"><a></a>    cls &lt;- class(x)[1]</span>
+<span id="cb21-78"><a></a>    nms &lt;- recipes::names0(ncol(x), prefix)</span>
+<span id="cb21-79"><a></a>    colnames(x) &lt;- nms</span>
+<span id="cb21-80"><a></a>    x &lt;- as_tibble(x)</span>
+<span id="cb21-81"><a></a>    x$variable &lt;- original</span>
+<span id="cb21-82"><a></a>    res &lt;- tidyr::pivot_longer(x, cols = c(-variable))</span>
+<span id="cb21-83"><a></a>    if (cls != "poly") {</span>
+<span id="cb21-84"><a></a>      res &lt;- res[res$value &gt; .Machine$double.eps,]</span>
+<span id="cb21-85"><a></a>    }</span>
+<span id="cb21-86"><a></a>    res</span>
+<span id="cb21-87"><a></a>  } </span>
+<span id="cb21-88"><a></a>  </span>
+<span id="cb21-89"><a></a>  mult_poly &lt;- function(dat, degree = 4) {</span>
+<span id="cb21-90"><a></a>    rng &lt;- extendrange(dat$x, f = .025)</span>
+<span id="cb21-91"><a></a>    grid &lt;- seq(rng[1], rng[2], length.out = 1000)</span>
+<span id="cb21-92"><a></a>    grid_df &lt;- tibble(x = grid)</span>
+<span id="cb21-93"><a></a>    feat &lt;- poly(grid_df$x, degree)</span>
+<span id="cb21-94"><a></a>    res &lt;- expansion_to_tibble(feat, grid_df$x)</span>
+<span id="cb21-95"><a></a>    </span>
+<span id="cb21-96"><a></a>    # make some random names so that we can plot the features with distinct colors</span>
+<span id="cb21-97"><a></a>    rand_names &lt;- lapply(1:degree, function(x) paste0(sample(letters)[1:10], collapse = ""))</span>
+<span id="cb21-98"><a></a>    rand_names&lt;- unlist(rand_names)</span>
+<span id="cb21-99"><a></a>    rand_names &lt;- tibble(name = unique(res$name), name2 = rand_names)</span>
+<span id="cb21-100"><a></a>    res &lt;- </span>
+<span id="cb21-101"><a></a>      dplyr::inner_join(res, rand_names, by = dplyr::join_by(name)) %&gt;% </span>
+<span id="cb21-102"><a></a>      dplyr::select(-name) %&gt;% </span>
+<span id="cb21-103"><a></a>      dplyr::rename(name = name2)</span>
+<span id="cb21-104"><a></a>    res</span>
+<span id="cb21-105"><a></a>  }</span>
+<span id="cb21-106"><a></a>  </span>
+<span id="cb21-107"><a></a>  # ------------------------------------------------------------------------------</span>
+<span id="cb21-108"><a></a>  </span>
+<span id="cb21-109"><a></a>  spline_example &lt;- tibble(y = ames$Sale_Price, x = ames$Latitude)</span>
+<span id="cb21-110"><a></a>  rng &lt;- extendrange(ames$Latitude, f = .025)</span>
+<span id="cb21-111"><a></a>  grid &lt;- seq(rng[1], rng[2], length.out = 1000)</span>
+<span id="cb21-112"><a></a>  grid_df &lt;- tibble(x = grid)</span>
+<span id="cb21-113"><a></a>  alphas &lt;- 1 / 4</span>
+<span id="cb21-114"><a></a>  line_wd &lt;- 1.0</span>
+<span id="cb21-115"><a></a>  </span>
+<span id="cb21-116"><a></a>  base_p &lt;-</span>
+<span id="cb21-117"><a></a>    spline_example %&gt;%</span>
+<span id="cb21-118"><a></a>    ggplot(aes(x = x, y = y)) +</span>
+<span id="cb21-119"><a></a>    geom_point(alpha = 3 / 4, pch = 1, cex = 3) +</span>
+<span id="cb21-120"><a></a>    labs(x = "Predictor", y = "Outcome") +</span>
+<span id="cb21-121"><a></a>    theme_light_bl()</span>
+<span id="cb21-122"><a></a>  </span>
+<span id="cb21-123"><a></a>  output$spline &lt;- renderPlot({</span>
+<span id="cb21-124"><a></a>    </span>
+<span id="cb21-125"><a></a>    spline_fit &lt;- lm(y ~ naturalSpline(x, df = input$spline_df), data = spline_example)</span>
+<span id="cb21-126"><a></a>    spline_pred &lt;- </span>
+<span id="cb21-127"><a></a>      predict(spline_fit, grid_df, interval = "confidence", level = .90) %&gt;% </span>
+<span id="cb21-128"><a></a>      bind_cols(grid_df)</span>
+<span id="cb21-129"><a></a>    </span>
+<span id="cb21-130"><a></a>    spline_p &lt;- base_p +</span>
+<span id="cb21-131"><a></a>      geom_ribbon(</span>
+<span id="cb21-132"><a></a>        data = spline_pred,</span>
+<span id="cb21-133"><a></a>        aes(y = NULL, ymin = lwr, ymax = upr),</span>
+<span id="cb21-134"><a></a>        alpha = 1 / 15) +</span>
+<span id="cb21-135"><a></a>      geom_line(</span>
+<span id="cb21-136"><a></a>        data = spline_pred,</span>
+<span id="cb21-137"><a></a>        aes(y = fit),</span>
+<span id="cb21-138"><a></a>        col = "red",</span>
+<span id="cb21-139"><a></a>        linewidth = line_wd)</span>
+<span id="cb21-140"><a></a>    </span>
+<span id="cb21-141"><a></a>    feature_p &lt;-</span>
+<span id="cb21-142"><a></a>      naturalSpline(grid_df$x, df = input$spline_df) %&gt;% </span>
+<span id="cb21-143"><a></a>      expansion_to_tibble(grid_df$x) %&gt;% </span>
+<span id="cb21-144"><a></a>      ggplot(aes(variable, y = value, group = name, col = name)) +</span>
+<span id="cb21-145"><a></a>      geom_line(show.legend = FALSE) + # , linewidth = 1, alpha = 1 / 2</span>
+<span id="cb21-146"><a></a>      theme_void() +</span>
+<span id="cb21-147"><a></a>      theme(</span>
+<span id="cb21-148"><a></a>        plot.margin = margin(t = 0, r = 0, b = -20, l = 0),</span>
+<span id="cb21-149"><a></a>        panel.background = col_rect,</span>
+<span id="cb21-150"><a></a>        plot.background = col_rect,</span>
+<span id="cb21-151"><a></a>        legend.background = col_rect,</span>
+<span id="cb21-152"><a></a>        legend.key = col_rect</span>
+<span id="cb21-153"><a></a>      ) +</span>
+<span id="cb21-154"><a></a>      scale_color_viridis(discrete = TRUE, option = "turbo")</span>
+<span id="cb21-155"><a></a>    </span>
+<span id="cb21-156"><a></a>    p &lt;- (feature_p / spline_p) + plot_layout(heights = c(1, 4))</span>
+<span id="cb21-157"><a></a>    </span>
+<span id="cb21-158"><a></a>    print(p)</span>
+<span id="cb21-159"><a></a>    </span>
+<span id="cb21-160"><a></a>  })</span>
+<span id="cb21-161"><a></a>  </span>
+<span id="cb21-162"><a></a>}</span>
+<span id="cb21-163"><a></a></span>
+<span id="cb21-164"><a></a>app &lt;- shinyApp(ui = ui, server = server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
 <section id="adding-splines" class="slide level2">
 <h2>Adding splines!</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>food_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(time_to_delivery <span class="sc">~</span> ., <span class="at">data =</span> delivery_train) <span class="sc">%&gt;%</span> </span>
-<span id="cb20-2"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_factor_predictors</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb20-3"><a></a>  <span class="fu">step_spline_natural</span>(hour, distance, <span class="at">deg_free =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22" data-code-line-numbers="3|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>food_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(time_to_delivery <span class="sc">~</span> ., <span class="at">data =</span> delivery_train) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_factor_predictors</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-3"><a></a>  <span class="fu">step_spline_natural</span>(hour, distance, <span class="at">deg_free =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><code>hour_1</code> - <code>hour_5</code>.</p>
+<p><br></p>
+<p>We’ll choose five terms for the two predictors (but we could optimize these).</p>
+<p>The new column naming convention is: <code>hour_1</code> - <code>hour_5</code>.</p>
 </section>
 <section id="adding-interactions" class="slide level2">
 <h2>Adding interactions</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>food_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(time_to_delivery <span class="sc">~</span> ., <span class="at">data =</span> delivery_train) <span class="sc">%&gt;%</span> </span>
-<span id="cb21-2"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_factor_predictors</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb21-3"><a></a>  <span class="fu">step_spline_natural</span>(hour, distance, <span class="at">deg_free =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb21-4"><a></a>  <span class="fu">step_interact</span>(<span class="sc">~</span> <span class="fu">starts_with</span>(<span class="st">"hour_"</span>)<span class="sc">:</span><span class="fu">starts_with</span>(<span class="st">"day_"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23" data-code-line-numbers="4|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>food_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(time_to_delivery <span class="sc">~</span> ., <span class="at">data =</span> delivery_train) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_factor_predictors</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-3"><a></a>  <span class="fu">step_spline_natural</span>(hour, distance, <span class="at">deg_free =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-4"><a></a>  <span class="fu">step_interact</span>(<span class="sc">~</span> <span class="fu">starts_with</span>(<span class="st">"hour_"</span>)<span class="sc">:</span><span class="fu">starts_with</span>(<span class="st">"day_"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><code>hour_1_x_day_Tue</code> … <code>hour_5_x_day_Sun</code></p>
+<p><br></p>
+<p>These new columns are named (by default) to be <code>hour_1_x_day_Tue</code> through <code>hour_5_x_day_Sun</code>.</p>
 </section>
 <section id="combining-a-model-and-a-recipe" class="slide level2">
 <h2>Combining a model and a recipe</h2>
 <p>We can make a new type of object called a <del>pipeline</del> workflow that can be used as one unit.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>lm_wflow <span class="ot">&lt;-</span> </span>
-<span id="cb22-2"><a></a>  <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb22-3"><a></a>  <span class="fu">add_model</span>(<span class="fu">linear_reg</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb22-4"><a></a>  <span class="fu">add_recipe</span>(food_rec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>lm_wflow <span class="ot">&lt;-</span> </span>
+<span id="cb24-2"><a></a>  <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb24-3"><a></a>  <span class="fu">add_model</span>(<span class="fu">linear_reg</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-4"><a></a>  <span class="fu">add_recipe</span>(food_rec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><br></p>
 <p><br></p>
@@ -1052,78 +1249,78 @@ github.com/topepo/2024_SSA_SCV
 <section id="combining-a-model-and-a-recipe-1" class="slide level2">
 <h2>Combining a model and a recipe</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>lm_wflow</span>
-<span id="cb23-2"><a></a><span class="co">#&gt; ══ Workflow ══════════════════════════════════════════════════════════</span></span>
-<span id="cb23-3"><a></a><span class="co">#&gt; Preprocessor: Recipe</span></span>
-<span id="cb23-4"><a></a><span class="co">#&gt; Model: linear_reg()</span></span>
-<span id="cb23-5"><a></a><span class="co">#&gt; </span></span>
-<span id="cb23-6"><a></a><span class="co">#&gt; ── Preprocessor ──────────────────────────────────────────────────────</span></span>
-<span id="cb23-7"><a></a><span class="co">#&gt; 3 Recipe Steps</span></span>
-<span id="cb23-8"><a></a><span class="co">#&gt; </span></span>
-<span id="cb23-9"><a></a><span class="co">#&gt; • step_dummy()</span></span>
-<span id="cb23-10"><a></a><span class="co">#&gt; • step_spline_natural()</span></span>
-<span id="cb23-11"><a></a><span class="co">#&gt; • step_interact()</span></span>
-<span id="cb23-12"><a></a><span class="co">#&gt; </span></span>
-<span id="cb23-13"><a></a><span class="co">#&gt; ── Model ─────────────────────────────────────────────────────────────</span></span>
-<span id="cb23-14"><a></a><span class="co">#&gt; Linear Regression Model Specification (regression)</span></span>
-<span id="cb23-15"><a></a><span class="co">#&gt; </span></span>
-<span id="cb23-16"><a></a><span class="co">#&gt; Computational engine: lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>lm_wflow</span>
+<span id="cb25-2"><a></a><span class="co">#&gt; ══ Workflow ══════════════════════════════════════════════════════════</span></span>
+<span id="cb25-3"><a></a><span class="co">#&gt; Preprocessor: Recipe</span></span>
+<span id="cb25-4"><a></a><span class="co">#&gt; Model: linear_reg()</span></span>
+<span id="cb25-5"><a></a><span class="co">#&gt; </span></span>
+<span id="cb25-6"><a></a><span class="co">#&gt; ── Preprocessor ──────────────────────────────────────────────────────</span></span>
+<span id="cb25-7"><a></a><span class="co">#&gt; 3 Recipe Steps</span></span>
+<span id="cb25-8"><a></a><span class="co">#&gt; </span></span>
+<span id="cb25-9"><a></a><span class="co">#&gt; • step_dummy()</span></span>
+<span id="cb25-10"><a></a><span class="co">#&gt; • step_spline_natural()</span></span>
+<span id="cb25-11"><a></a><span class="co">#&gt; • step_interact()</span></span>
+<span id="cb25-12"><a></a><span class="co">#&gt; </span></span>
+<span id="cb25-13"><a></a><span class="co">#&gt; ── Model ─────────────────────────────────────────────────────────────</span></span>
+<span id="cb25-14"><a></a><span class="co">#&gt; Linear Regression Model Specification (regression)</span></span>
+<span id="cb25-15"><a></a><span class="co">#&gt; </span></span>
+<span id="cb25-16"><a></a><span class="co">#&gt; Computational engine: lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="combining-a-model-and-a-recipe-2" class="slide level2">
 <h2>Combining a model and a recipe</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>lm_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(lm_wflow, <span class="at">data =</span> delivery_train)</span>
-<span id="cb24-2"><a></a></span>
-<span id="cb24-3"><a></a><span class="fu">tidy</span>(lm_fit) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(term)</span>
-<span id="cb24-4"><a></a><span class="co">#&gt; # A tibble: 74 × 5</span></span>
-<span id="cb24-5"><a></a><span class="co">#&gt;    term        estimate std.error statistic  p.value</span></span>
-<span id="cb24-6"><a></a><span class="co">#&gt;    &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span id="cb24-7"><a></a><span class="co">#&gt;  1 (Intercept)   12.5       0.834    14.9   8.35e-50</span></span>
-<span id="cb24-8"><a></a><span class="co">#&gt;  2 day_Fri       -4.62      0.867    -5.33  9.89e- 8</span></span>
-<span id="cb24-9"><a></a><span class="co">#&gt;  3 day_Sat       -4.59      0.857    -5.35  9.02e- 8</span></span>
-<span id="cb24-10"><a></a><span class="co">#&gt;  4 day_Sun       -3.12      0.904    -3.45  5.62e- 4</span></span>
-<span id="cb24-11"><a></a><span class="co">#&gt;  5 day_Thu       -3.54      0.912    -3.88  1.05e- 4</span></span>
-<span id="cb24-12"><a></a><span class="co">#&gt;  6 day_Tue       -0.509     1.01     -0.505 6.13e- 1</span></span>
-<span id="cb24-13"><a></a><span class="co">#&gt;  7 day_Wed       -2.83      0.895    -3.17  1.54e- 3</span></span>
-<span id="cb24-14"><a></a><span class="co">#&gt;  8 distance_1     1.39      0.460     3.03  2.46e- 3</span></span>
-<span id="cb24-15"><a></a><span class="co">#&gt;  9 distance_2     1.53      0.220     6.94  4.36e-12</span></span>
-<span id="cb24-16"><a></a><span class="co">#&gt; 10 distance_3     2.67      0.259    10.3   9.43e-25</span></span>
-<span id="cb24-17"><a></a><span class="co">#&gt; # ℹ 64 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>lm_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(lm_wflow, <span class="at">data =</span> delivery_train)</span>
+<span id="cb26-2"><a></a></span>
+<span id="cb26-3"><a></a><span class="fu">tidy</span>(lm_fit) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(term)</span>
+<span id="cb26-4"><a></a><span class="co">#&gt; # A tibble: 74 × 5</span></span>
+<span id="cb26-5"><a></a><span class="co">#&gt;    term        estimate std.error statistic  p.value</span></span>
+<span id="cb26-6"><a></a><span class="co">#&gt;    &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb26-7"><a></a><span class="co">#&gt;  1 (Intercept)   12.5       0.834    14.9   8.35e-50</span></span>
+<span id="cb26-8"><a></a><span class="co">#&gt;  2 day_Fri       -4.62      0.867    -5.33  9.89e- 8</span></span>
+<span id="cb26-9"><a></a><span class="co">#&gt;  3 day_Sat       -4.59      0.857    -5.35  9.02e- 8</span></span>
+<span id="cb26-10"><a></a><span class="co">#&gt;  4 day_Sun       -3.12      0.904    -3.45  5.62e- 4</span></span>
+<span id="cb26-11"><a></a><span class="co">#&gt;  5 day_Thu       -3.54      0.912    -3.88  1.05e- 4</span></span>
+<span id="cb26-12"><a></a><span class="co">#&gt;  6 day_Tue       -0.509     1.01     -0.505 6.13e- 1</span></span>
+<span id="cb26-13"><a></a><span class="co">#&gt;  7 day_Wed       -2.83      0.895    -3.17  1.54e- 3</span></span>
+<span id="cb26-14"><a></a><span class="co">#&gt;  8 distance_1     1.39      0.460     3.03  2.46e- 3</span></span>
+<span id="cb26-15"><a></a><span class="co">#&gt;  9 distance_2     1.53      0.220     6.94  4.36e-12</span></span>
+<span id="cb26-16"><a></a><span class="co">#&gt; 10 distance_3     2.67      0.259    10.3   9.43e-25</span></span>
+<span id="cb26-17"><a></a><span class="co">#&gt; # ℹ 64 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="a-better-path-to-metrics" class="slide level2">
 <h2>A better path to metrics</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>val_rs <span class="ot">&lt;-</span> <span class="fu">validation_set</span>(delivery_split)</span>
-<span id="cb25-2"><a></a>val_rs</span>
-<span id="cb25-3"><a></a><span class="co">#&gt; # A tibble: 1 × 2</span></span>
-<span id="cb25-4"><a></a><span class="co">#&gt;   splits              id        </span></span>
-<span id="cb25-5"><a></a><span class="co">#&gt;   &lt;list&gt;              &lt;chr&gt;     </span></span>
-<span id="cb25-6"><a></a><span class="co">#&gt; 1 &lt;split [8008/1000]&gt; validation</span></span>
-<span id="cb25-7"><a></a></span>
-<span id="cb25-8"><a></a>lm_res <span class="ot">&lt;-</span> </span>
-<span id="cb25-9"><a></a>  lm_wflow <span class="sc">%&gt;%</span> </span>
-<span id="cb25-10"><a></a>  <span class="fu">fit_resamples</span>(val_rs, <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb25-11"><a></a></span>
-<span id="cb25-12"><a></a>lm_res</span>
-<span id="cb25-13"><a></a><span class="co">#&gt; # Resampling results</span></span>
-<span id="cb25-14"><a></a><span class="co">#&gt; #  </span></span>
-<span id="cb25-15"><a></a><span class="co">#&gt; # A tibble: 1 × 5</span></span>
-<span id="cb25-16"><a></a><span class="co">#&gt;   splits              id         .metrics .notes   .predictions</span></span>
-<span id="cb25-17"><a></a><span class="co">#&gt;   &lt;list&gt;              &lt;chr&gt;      &lt;list&gt;   &lt;list&gt;   &lt;list&gt;      </span></span>
-<span id="cb25-18"><a></a><span class="co">#&gt; 1 &lt;split [8008/1000]&gt; validation &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>val_rs <span class="ot">&lt;-</span> <span class="fu">validation_set</span>(delivery_split)</span>
+<span id="cb27-2"><a></a>val_rs</span>
+<span id="cb27-3"><a></a><span class="co">#&gt; # A tibble: 1 × 2</span></span>
+<span id="cb27-4"><a></a><span class="co">#&gt;   splits              id        </span></span>
+<span id="cb27-5"><a></a><span class="co">#&gt;   &lt;list&gt;              &lt;chr&gt;     </span></span>
+<span id="cb27-6"><a></a><span class="co">#&gt; 1 &lt;split [8008/1000]&gt; validation</span></span>
+<span id="cb27-7"><a></a></span>
+<span id="cb27-8"><a></a>lm_res <span class="ot">&lt;-</span> </span>
+<span id="cb27-9"><a></a>  lm_wflow <span class="sc">%&gt;%</span> </span>
+<span id="cb27-10"><a></a>  <span class="fu">fit_resamples</span>(val_rs, <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb27-11"><a></a></span>
+<span id="cb27-12"><a></a>lm_res</span>
+<span id="cb27-13"><a></a><span class="co">#&gt; # Resampling results</span></span>
+<span id="cb27-14"><a></a><span class="co">#&gt; #  </span></span>
+<span id="cb27-15"><a></a><span class="co">#&gt; # A tibble: 1 × 5</span></span>
+<span id="cb27-16"><a></a><span class="co">#&gt;   splits              id         .metrics .notes   .predictions</span></span>
+<span id="cb27-17"><a></a><span class="co">#&gt;   &lt;list&gt;              &lt;chr&gt;      &lt;list&gt;   &lt;list&gt;   &lt;list&gt;      </span></span>
+<span id="cb27-18"><a></a><span class="co">#&gt; 1 &lt;split [8008/1000]&gt; validation &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="performance" class="slide level2">
 <h2>Performance</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">collect_metrics</span>(lm_res)</span>
-<span id="cb26-2"><a></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb26-3"><a></a><span class="co">#&gt;   .metric .estimator  mean     n std_err .config             </span></span>
-<span id="cb26-4"><a></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               </span></span>
-<span id="cb26-5"><a></a><span class="co">#&gt; 1 rmse    standard   2.39      1      NA Preprocessor1_Model1</span></span>
-<span id="cb26-6"><a></a><span class="co">#&gt; 2 rsq     standard   0.881     1      NA Preprocessor1_Model1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">collect_metrics</span>(lm_res)</span>
+<span id="cb28-2"><a></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb28-3"><a></a><span class="co">#&gt;   .metric .estimator  mean     n std_err .config             </span></span>
+<span id="cb28-4"><a></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               </span></span>
+<span id="cb28-5"><a></a><span class="co">#&gt; 1 rmse    standard   2.39      1      NA Preprocessor1_Model1</span></span>
+<span id="cb28-6"><a></a><span class="co">#&gt; 2 rsq     standard   0.881     1      NA Preprocessor1_Model1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="does-it-work-better" class="slide level2">
@@ -1131,13 +1328,13 @@ github.com/topepo/2024_SSA_SCV
 <div class="columns">
 <div class="column" style="width:60%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>lm_res <span class="sc">%&gt;%</span> </span>
-<span id="cb27-2"><a></a>  <span class="fu">collect_predictions</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb27-3"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(.pred, time_to_delivery)) <span class="sc">+</span> </span>
-<span id="cb27-4"><a></a>  <span class="fu">geom_abline</span>(<span class="at">col =</span> <span class="st">"green"</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb27-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb27-6"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb27-7"><a></a>  <span class="fu">coord_obs_pred</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>lm_res <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a></a>  <span class="fu">collect_predictions</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb29-3"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(.pred, time_to_delivery)) <span class="sc">+</span> </span>
+<span id="cb29-4"><a></a>  <span class="fu">geom_abline</span>(<span class="at">col =</span> <span class="st">"green"</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb29-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb29-6"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb29-7"><a></a>  <span class="fu">coord_obs_pred</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Not perfect but 👍.</p>
 <p><br></p>
@@ -1147,7 +1344,7 @@ github.com/topepo/2024_SSA_SCV
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-right">
 <figure>
-<p><img data-src="index_files/figure-revealjs/rec-cal-plot-1.png" class="quarto-figure quarto-figure-right" style="width:100.0%"></p>
+<p><img data-src="figures/rec-cal-plot-1.svg" class="quarto-figure quarto-figure-right" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1205,21 +1402,21 @@ then
 <section id="fitting-a-cubist-model" class="slide level2">
 <h2>Fitting a Cubist model</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">library</span>(rules)</span>
-<span id="cb30-2"><a></a></span>
-<span id="cb30-3"><a></a>cubist_res <span class="ot">&lt;-</span> </span>
-<span id="cb30-4"><a></a>  <span class="fu">cubist_rules</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb30-5"><a></a>  <span class="fu">fit_resamples</span>(</span>
-<span id="cb30-6"><a></a>    time_to_delivery <span class="sc">~</span> ., </span>
-<span id="cb30-7"><a></a>    <span class="at">resamples =</span> val_rs, </span>
-<span id="cb30-8"><a></a>    <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb30-9"><a></a></span>
-<span id="cb30-10"><a></a><span class="fu">collect_metrics</span>(cubist_res)</span>
-<span id="cb30-11"><a></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
-<span id="cb30-12"><a></a><span class="co">#&gt;   .metric .estimator  mean     n std_err .config             </span></span>
-<span id="cb30-13"><a></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               </span></span>
-<span id="cb30-14"><a></a><span class="co">#&gt; 1 rmse    standard   2.18      1      NA Preprocessor1_Model1</span></span>
-<span id="cb30-15"><a></a><span class="co">#&gt; 2 rsq     standard   0.901     1      NA Preprocessor1_Model1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">library</span>(rules)</span>
+<span id="cb32-2"><a></a></span>
+<span id="cb32-3"><a></a>cubist_res <span class="ot">&lt;-</span> </span>
+<span id="cb32-4"><a></a>  <span class="fu">cubist_rules</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb32-5"><a></a>  <span class="fu">fit_resamples</span>(</span>
+<span id="cb32-6"><a></a>    time_to_delivery <span class="sc">~</span> ., </span>
+<span id="cb32-7"><a></a>    <span class="at">resamples =</span> val_rs, </span>
+<span id="cb32-8"><a></a>    <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb32-9"><a></a></span>
+<span id="cb32-10"><a></a><span class="fu">collect_metrics</span>(cubist_res)</span>
+<span id="cb32-11"><a></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb32-12"><a></a><span class="co">#&gt;   .metric .estimator  mean     n std_err .config             </span></span>
+<span id="cb32-13"><a></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               </span></span>
+<span id="cb32-14"><a></a><span class="co">#&gt; 1 rmse    standard   2.18      1      NA Preprocessor1_Model1</span></span>
+<span id="cb32-15"><a></a><span class="co">#&gt; 2 rsq     standard   0.901     1      NA Preprocessor1_Model1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="does-it-work-better-1" class="slide level2">
@@ -1227,13 +1424,13 @@ then
 <div class="columns">
 <div class="column" style="width:60%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>cubist_res <span class="sc">%&gt;%</span> </span>
-<span id="cb31-2"><a></a>  <span class="fu">collect_predictions</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb31-3"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(.pred, time_to_delivery)) <span class="sc">+</span> </span>
-<span id="cb31-4"><a></a>  <span class="fu">geom_abline</span>(<span class="at">col =</span> <span class="st">"green"</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb31-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb31-6"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb31-7"><a></a>  <span class="fu">coord_obs_pred</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>cubist_res <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a></a>  <span class="fu">collect_predictions</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(.pred, time_to_delivery)) <span class="sc">+</span> </span>
+<span id="cb33-4"><a></a>  <span class="fu">geom_abline</span>(<span class="at">col =</span> <span class="st">"green"</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb33-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb33-6"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb33-7"><a></a>  <span class="fu">coord_obs_pred</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><em>Nice</em></p>
 </div><div class="column" style="width:40%;">
@@ -1241,7 +1438,7 @@ then
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-right">
 <figure>
-<p><img data-src="index_files/figure-revealjs/cubist-cal-plot-1.png" class="quarto-figure quarto-figure-right" style="width:100.0%"></p>
+<p><img data-src="figures/cubist-cal-plot-1.svg" class="quarto-figure quarto-figure-right" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1257,18 +1454,18 @@ then
 <section id="a-shortcut" class="slide level2">
 <h2>A shortcut</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>cubist_wflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>(time_to_delivery <span class="sc">~</span> ., <span class="fu">cubist_rules</span>())</span>
-<span id="cb32-2"><a></a></span>
-<span id="cb32-3"><a></a>cubist_final_res <span class="ot">&lt;-</span> </span>
-<span id="cb32-4"><a></a>  cubist_wflow <span class="sc">%&gt;%</span> <span class="fu">last_fit</span>(delivery_split)</span>
-<span id="cb32-5"><a></a></span>
-<span id="cb32-6"><a></a>cubist_final_res</span>
-<span id="cb32-7"><a></a><span class="co">#&gt; # Resampling results</span></span>
-<span id="cb32-8"><a></a><span class="co">#&gt; # Manual resampling </span></span>
-<span id="cb32-9"><a></a><span class="co">#&gt; # A tibble: 1 × 6</span></span>
-<span id="cb32-10"><a></a><span class="co">#&gt;   splits              id     .metrics .notes   .predictions .workflow </span></span>
-<span id="cb32-11"><a></a><span class="co">#&gt;   &lt;list&gt;              &lt;chr&gt;  &lt;list&gt;   &lt;list&gt;   &lt;list&gt;       &lt;list&gt;    </span></span>
-<span id="cb32-12"><a></a><span class="co">#&gt; 1 &lt;split [8008/1004]&gt; train… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt;     &lt;workflow&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>cubist_wflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>(time_to_delivery <span class="sc">~</span> ., <span class="fu">cubist_rules</span>())</span>
+<span id="cb34-2"><a></a></span>
+<span id="cb34-3"><a></a>cubist_final_res <span class="ot">&lt;-</span> </span>
+<span id="cb34-4"><a></a>  cubist_wflow <span class="sc">%&gt;%</span> <span class="fu">last_fit</span>(delivery_split)</span>
+<span id="cb34-5"><a></a></span>
+<span id="cb34-6"><a></a>cubist_final_res</span>
+<span id="cb34-7"><a></a><span class="co">#&gt; # Resampling results</span></span>
+<span id="cb34-8"><a></a><span class="co">#&gt; # Manual resampling </span></span>
+<span id="cb34-9"><a></a><span class="co">#&gt; # A tibble: 1 × 6</span></span>
+<span id="cb34-10"><a></a><span class="co">#&gt;   splits              id     .metrics .notes   .predictions .workflow </span></span>
+<span id="cb34-11"><a></a><span class="co">#&gt;   &lt;list&gt;              &lt;chr&gt;  &lt;list&gt;   &lt;list&gt;   &lt;list&gt;       &lt;list&gt;    </span></span>
+<span id="cb34-12"><a></a><span class="co">#&gt; 1 &lt;split [8008/1004]&gt; train… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt;     &lt;workflow&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="test-set-results" class="slide level2">
@@ -1276,22 +1473,22 @@ then
 <div class="columns">
 <div class="column" style="width:60%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">collect_metrics</span>(cubist_final_res)</span>
-<span id="cb33-2"><a></a><span class="co">#&gt; # A tibble: 2 × 4</span></span>
-<span id="cb33-3"><a></a><span class="co">#&gt;   .metric .estimator .estimate .config             </span></span>
-<span id="cb33-4"><a></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;               </span></span>
-<span id="cb33-5"><a></a><span class="co">#&gt; 1 rmse    standard       2.08  Preprocessor1_Model1</span></span>
-<span id="cb33-6"><a></a><span class="co">#&gt; 2 rsq     standard       0.914 Preprocessor1_Model1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">collect_metrics</span>(cubist_final_res)</span>
+<span id="cb35-2"><a></a><span class="co">#&gt; # A tibble: 2 × 4</span></span>
+<span id="cb35-3"><a></a><span class="co">#&gt;   .metric .estimator .estimate .config             </span></span>
+<span id="cb35-4"><a></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;               </span></span>
+<span id="cb35-5"><a></a><span class="co">#&gt; 1 rmse    standard       2.08  Preprocessor1_Model1</span></span>
+<span id="cb35-6"><a></a><span class="co">#&gt; 2 rsq     standard       0.914 Preprocessor1_Model1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Not too bad.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>cubist_final_res <span class="sc">%&gt;%</span> </span>
-<span id="cb34-2"><a></a>  <span class="fu">collect_predictions</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb34-3"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(.pred, time_to_delivery)) <span class="sc">+</span> </span>
-<span id="cb34-4"><a></a>  <span class="fu">geom_abline</span>(<span class="at">col =</span> <span class="st">"green"</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb34-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb34-6"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb34-7"><a></a>  <span class="fu">coord_obs_pred</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>cubist_final_res <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a></a>  <span class="fu">collect_predictions</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb36-3"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(.pred, time_to_delivery)) <span class="sc">+</span> </span>
+<span id="cb36-4"><a></a>  <span class="fu">geom_abline</span>(<span class="at">col =</span> <span class="st">"green"</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb36-5"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb36-6"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb36-7"><a></a>  <span class="fu">coord_obs_pred</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Hmm. Could be better.</p>
 </div><div class="column" style="width:40%;">
@@ -1299,7 +1496,7 @@ then
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-right">
 <figure>
-<p><img data-src="index_files/figure-revealjs/cubist-test-cal-plot-1.png" class="quarto-figure quarto-figure-right" style="width:100.0%"></p>
+<p><img data-src="figures/cubist-test-cal-plot-1.svg" class="quarto-figure quarto-figure-right" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1346,13 +1543,18 @@ then
 <li>homepage: <span style="color:#CA225E;">workshops.tidymodels.org</span></li>
 <li>aml4td: <span style="color:#CA225E;">tidymodels.aml4td.org</span></li>
 </ul>
-<div class="fragment">
-<p>Thank you!</p>
+</section>
+<section id="thanks" class="slide level2">
+<h2>Thanks</h2>
+<p>Thanks for the invitation to speak today!</p>
+<p><br></p>
+<p>The tidymodels team: <strong>Hannah Frick, Emil Hvitfeldt, and Simon Couch</strong>.</p>
+<p><br></p>
+<p>Special thanks to the other folks who contributed so much to tidymodels: Davis Vaughan, Julia Silge, Edgar Ruiz, Alison Hill, Desirée De Leon, Marly Gotti, our previous interns, and the tidyverse team.</p>
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
-
-</div>
+<p><a href="https://topepo.github.io/2024_SSA_SCV" class="uri">https://topepo.github.io/2024_SSA_SCV</a></p>
 </div>
 </div>
 </section></section>
@@ -1408,7 +1610,7 @@ then
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: false,
+        slideNumber: 'c/t',
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
@@ -1533,9 +1735,9 @@ then
         // The "normal" size of the presentation, aspect ratio will be preserved
         // when the presentation is scaled to fit different resolutions. Can be
         // specified using percentage units.
-        width: 1050,
+        width: 1280,
 
-        height: 700,
+        height: 720,
 
         // Factor of the display size that should remain empty around the content
         margin: 0.1,
