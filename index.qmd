@@ -352,7 +352,7 @@ model <-
 
 > By removing the burden of writing procedural logic, **I get to focus on scientific and statistical questions** about my data and model.
 
-[David Robinson](http://varianceexplained.org/r/sliced-ml/)
+[David Robinson](http://varianceexplained.org/r/sliced-ml/){target="_blank"}
 
 ------------------------------------------------------------------------
 
@@ -878,7 +878,7 @@ These new columns are named (by default) to be `hour_1_x_day_Tue` through `hour_
 
 <br>
 
-[List of known recipe steps](https://www.tidymodels.org/find/recipes/).
+[List of known recipe steps](https://www.tidymodels.org/find/recipes/){target="_blank"}.
 
 ## Combining a model and a recipe
 
@@ -1012,7 +1012,7 @@ However...
 
 ## Rule-based ensembles
 
-[Cubist](https://scholar.google.com/scholar?hl=en&as_sdt=0,7&q=quinlan+learning+with+continuous+classes) is a rule-based ensemble. 
+[Cubist](https://scholar.google.com/scholar?hl=en&as_sdt=0,7&q=quinlan+learning+with+continuous+classes){target="_blank"} is a rule-based ensemble. 
 
 It first creates a regression tree and converts it into a rule
 
