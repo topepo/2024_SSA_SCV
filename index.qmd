@@ -169,7 +169,10 @@ Think about the modeling problem, not the syntax.
 
 
 ```{r}
+#| message: true
 library(tidymodels)
+
+tidymodels_prefer()
 ```
 
 ```{r}
@@ -187,6 +190,7 @@ library(bundle)
 library(vetiver)
 library(pins)
 
+library(countdown)
 
 options(width = 70)
 
@@ -453,7 +457,7 @@ The vetiver package makes it extremely easy to publish your model.
 
 # Applied example `r emo::ji("pizza")``r emo::ji("pizza")`{background-color="#CA225E"}
 
-## Food deliveries!
+## Food deliveries
 
 These data are in the modeldata package. 
 
@@ -463,6 +467,13 @@ These data are in the modeldata package.
 glimpse(deliveries)
 ```
 
+## Investigate the data!
+
+Let's take 10m and have you explore the data. 
+
+Let me know what you think about them. (not a trick question)
+
+`r countdown(minutes = 10, left = 1)`
 
 ## Splitting the data
 
@@ -859,6 +870,10 @@ food_rec <- recipe(time_to_delivery ~ ., data = delivery_train) %>%
 
 These new columns are named (by default) to be `hour_1_x_day_Tue` through `hour_5_x_day_Sun`.
 
+<br>
+
+**Question**: In a new step, how would you select the interactions?
+
 ## Combining a model and a recipe
 
 We can make a new type of object called a ~~pipeline~~ workflow that can be used as one unit. 
@@ -903,7 +918,7 @@ tidy(lm_fit) %>% arrange(term)
 
 ```{r}
 #| label: fit-resamples
-
+#| code-line-numbers: "1|6|"
 val_rs <- validation_set(delivery_split)
 val_rs
 
@@ -914,6 +929,7 @@ lm_res <-
 lm_res
 ```
 
+([TMwR](https://www.tmwr.org/resampling){target="_blank"})
 
 ## Performance
 
@@ -933,6 +949,7 @@ collect_metrics(lm_res)
 ```{r}
 #| label: rec-cal-plot-code
 #| eval: false
+#| code-line-numbers: "1-2|"
 lm_res %>% 
   collect_predictions() %>% 
   ggplot(aes(.pred, time_to_delivery)) + 
@@ -1037,6 +1054,7 @@ then
 
 ```{r}
 #| label: cubist
+#| code-line-numbers: "1-4|"
 library(rules)
 
 cubist_res <- 
@@ -1102,8 +1120,7 @@ cubist_res %>%
 
 cubist_wflow <- workflow(time_to_delivery ~ ., cubist_rules())
 
-cubist_final_res <- 
-  cubist_wflow %>% last_fit(delivery_split)
+cubist_final_res <- cubist_wflow %>% last_fit(delivery_split)
 
 cubist_final_res
 ```
@@ -1125,6 +1142,7 @@ Not too bad.
 ```{r}
 #| label: cubist-test-cal-plot-code
 #| eval: false
+#| code-line-numbers: "1|"
 cubist_final_res %>% 
   collect_predictions() %>% 
   ggplot(aes(.pred, time_to_delivery)) + 
