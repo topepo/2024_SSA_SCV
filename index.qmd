@@ -667,6 +667,8 @@ We choose the type of spline function and how many features to use.
  
 We'll focus on _natural splines_. 
 
+<br> <br>
+
 ([TMwR](https://www.tmwr.org/recipes#spline-functions){target="_blank"})
 
 ##
@@ -873,6 +875,10 @@ These new columns are named (by default) to be `hour_1_x_day_Tue` through `hour_
 <br>
 
 **Question**: In a new step, how would you select the interactions?
+
+<br>
+
+[List of known recipe steps](https://www.tidymodels.org/find/recipes/).
 
 ## Combining a model and a recipe
 
@@ -1226,4 +1232,4 @@ The tidymodels team: **Hannah Frick, Emil Hvitfeldt, and Simon Couch**.
 
 <br> 
 
-Special thanks to the other folks who contributed so much to tidymodels: Davis Vaughan, Julia Silge, Edgar Ruiz, Alison Hill, Desirée De Leon, Marly Gotti, our previous interns, and the tidyverse team.
+Special thanks to the other folks who contributed so much to tidymodels: Davis Vaughan, Julia Silge, Edgar Ruiz, Alison Hill, Desirée De Leon, our previous interns, and the tidyverse team.

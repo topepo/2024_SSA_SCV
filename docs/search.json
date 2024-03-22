@@ -32,7 +32,7 @@
     "href": "index.html#the-meta-package",
     "title": "Introduction to Machine Learning with tidymodels",
     "section": "The Meta-package",
-    "text": "The Meta-package\n\nlibrary(tidymodels)\n#&gt; ── Attaching packages ────────────────────────────────────── tidymodels 1.2.0 ──\n#&gt; ✔ broom        1.0.5          ✔ recipes      1.0.10    \n#&gt; ✔ dials        1.2.1          ✔ rsample      1.2.0     \n#&gt; ✔ dplyr        1.1.4          ✔ tibble       3.2.1     \n#&gt; ✔ ggplot2      3.5.0          ✔ tidyr        1.3.1     \n#&gt; ✔ infer        1.0.6          ✔ tune         1.2.0     \n#&gt; ✔ modeldata    1.3.0          ✔ workflows    1.1.4     \n#&gt; ✔ parsnip      1.2.1          ✔ workflowsets 1.1.0.9000\n#&gt; ✔ purrr        1.0.2          ✔ yardstick    1.3.1\n#&gt; ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──\n#&gt; ✖ purrr::discard() masks scales::discard()\n#&gt; ✖ dplyr::filter()  masks stats::filter()\n#&gt; ✖ dplyr::lag()     masks stats::lag()\n#&gt; ✖ recipes::step()  masks stats::step()\n#&gt; • Learn how to get started at https://www.tidymodels.org/start/\n\ntidymodels_prefer()"
+    "text": "The Meta-package\n\nlibrary(tidymodels)\n#&gt; ── Attaching packages ────────────────────────────────────── tidymodels 1.2.0 ──\n#&gt; ✔ broom        1.0.5          ✔ recipes      1.0.10    \n#&gt; ✔ dials        1.2.1          ✔ rsample      1.2.0     \n#&gt; ✔ dplyr        1.1.4          ✔ tibble       3.2.1     \n#&gt; ✔ ggplot2      3.5.0          ✔ tidyr        1.3.1     \n#&gt; ✔ infer        1.0.6          ✔ tune         1.2.0     \n#&gt; ✔ modeldata    1.3.0          ✔ workflows    1.1.4     \n#&gt; ✔ parsnip      1.2.1          ✔ workflowsets 1.1.0.9000\n#&gt; ✔ purrr        1.0.2          ✔ yardstick    1.3.1\n#&gt; ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──\n#&gt; ✖ purrr::discard() masks scales::discard()\n#&gt; ✖ dplyr::filter()  masks stats::filter()\n#&gt; ✖ dplyr::lag()     masks stats::lag()\n#&gt; ✖ recipes::step()  masks stats::step()\n#&gt; • Use tidymodels_prefer() to resolve common conflicts.\n\ntidymodels_prefer()"
   },
   {
     "objectID": "index.html#why-tidymodels-consistency",
@@ -200,7 +200,7 @@
     "href": "index.html#splines-are-the-best",
     "title": "Introduction to Machine Learning with tidymodels",
     "section": "Splines are the best",
-    "text": "Splines are the best\nSplines are tools that enable linear models to model nonlinear data.\nWe choose the type of spline function and how many features to use.\n\nMore features, more flexibility\nMore features, more risk of overfitting\n\nWe’ll focus on natural splines.\n(TMwR)"
+    "text": "Splines are the best\nSplines are tools that enable linear models to model nonlinear data.\nWe choose the type of spline function and how many features to use.\n\nMore features, more flexibility\nMore features, more risk of overfitting\n\nWe’ll focus on natural splines.\n \n(TMwR)"
   },
   {
     "objectID": "index.html#section-2",
@@ -221,7 +221,7 @@
     "href": "index.html#adding-interactions",
     "title": "Introduction to Machine Learning with tidymodels",
     "section": "Adding interactions",
-    "text": "Adding interactions\n\nfood_rec &lt;- recipe(time_to_delivery ~ ., data = delivery_train) %&gt;% \n  step_dummy(all_factor_predictors()) %&gt;% \n  step_spline_natural(hour, distance, deg_free = 5) %&gt;% \n  step_interact(~ starts_with(\"hour_\"):starts_with(\"day_\"))\n\n\nThese new columns are named (by default) to be hour_1_x_day_Tue through hour_5_x_day_Sun.\n\nQuestion: In a new step, how would you select the interactions?"
+    "text": "Adding interactions\n\nfood_rec &lt;- recipe(time_to_delivery ~ ., data = delivery_train) %&gt;% \n  step_dummy(all_factor_predictors()) %&gt;% \n  step_spline_natural(hour, distance, deg_free = 5) %&gt;% \n  step_interact(~ starts_with(\"hour_\"):starts_with(\"day_\"))\n\n\nThese new columns are named (by default) to be hour_1_x_day_Tue through hour_5_x_day_Sun.\n\nQuestion: In a new step, how would you select the interactions?\n\nList of known recipe steps."
   },
   {
     "objectID": "index.html#combining-a-model-and-a-recipe",
@@ -347,6 +347,6 @@
     "href": "index.html#thanks",
     "title": "Introduction to Machine Learning with tidymodels",
     "section": "Thanks",
-    "text": "Thanks\nThanks for the invitation to speak today!\n\nThe tidymodels team: Hannah Frick, Emil Hvitfeldt, and Simon Couch.\n\nSpecial thanks to the other folks who contributed so much to tidymodels: Davis Vaughan, Julia Silge, Edgar Ruiz, Alison Hill, Desirée De Leon, Marly Gotti, our previous interns, and the tidyverse team.\n\n\n\nhttps://topepo.github.io/2024_SSA_SCV"
+    "text": "Thanks\nThanks for the invitation to speak today!\n\nThe tidymodels team: Hannah Frick, Emil Hvitfeldt, and Simon Couch.\n\nSpecial thanks to the other folks who contributed so much to tidymodels: Davis Vaughan, Julia Silge, Edgar Ruiz, Alison Hill, Desirée De Leon, our previous interns, and the tidyverse team.\n\n\n\nhttps://topepo.github.io/2024_SSA_SCV"
   }
 ]

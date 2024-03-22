@@ -555,7 +555,7 @@ slides: https://topepo.github.io/2024_SSA_SCV
 <span id="cb1-13"><a></a><span class="co">#&gt; ✖ dplyr::filter()  masks stats::filter()</span></span>
 <span id="cb1-14"><a></a><span class="co">#&gt; ✖ dplyr::lag()     masks stats::lag()</span></span>
 <span id="cb1-15"><a></a><span class="co">#&gt; ✖ recipes::step()  masks stats::step()</span></span>
-<span id="cb1-16"><a></a><span class="co">#&gt; • Learn how to get started at https://www.tidymodels.org/start/</span></span>
+<span id="cb1-16"><a></a><span class="co">#&gt; • Use tidymodels_prefer() to resolve common conflicts.</span></span>
 <span id="cb1-17"><a></a></span>
 <span id="cb1-18"><a></a><span class="fu">tidymodels_prefer</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -890,7 +890,7 @@ slides: https://topepo.github.io/2024_SSA_SCV
 <h2>Investigate the data!</h2>
 <p>Let’s take 10m and have you explore the data.</p>
 <p>Let me know what you think about them. (not a trick question)</p>
-<p></p><div class="countdown" id="timer_d3d27a66" data-update-every="1" tabindex="0" style="bottom:0;left:1;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
+<p></p><div class="countdown" id="timer_e207efa2" data-update-every="1" tabindex="0" style="bottom:0;left:1;"> <div class="countdown-controls"><button class="countdown-bump-down">−</button><button class="countdown-bump-up">+</button></div> <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code> </div><p></p>
 </section>
 <section id="splitting-the-data" class="slide level2">
 <h2>Splitting the data</h2>
@@ -1070,6 +1070,7 @@ slides: https://topepo.github.io/2024_SSA_SCV
 <li>More features, more risk of overfitting</li>
 </ul>
 <p>We’ll focus on <em>natural splines</em>.</p>
+<p><br> <br></p>
 <p>(<a href="https://www.tmwr.org/recipes#spline-functions" target="_blank">TMwR</a>)</p>
 </section>
 <section id="section-2" class="slide level2">
@@ -1262,6 +1263,8 @@ slides: https://topepo.github.io/2024_SSA_SCV
 <p>These new columns are named (by default) to be <code>hour_1_x_day_Tue</code> through <code>hour_5_x_day_Sun</code>.</p>
 <p><br></p>
 <p><strong>Question</strong>: In a new step, how would you select the interactions?</p>
+<p><br></p>
+<p><a href="https://www.tidymodels.org/find/recipes/">List of known recipe steps</a>.</p>
 </section>
 <section id="combining-a-model-and-a-recipe" class="slide level2">
 <h2>Combining a model and a recipe</h2>
@@ -1581,7 +1584,7 @@ then
 <p><br></p>
 <p>The tidymodels team: <strong>Hannah Frick, Emil Hvitfeldt, and Simon Couch</strong>.</p>
 <p><br></p>
-<p>Special thanks to the other folks who contributed so much to tidymodels: Davis Vaughan, Julia Silge, Edgar Ruiz, Alison Hill, Desirée De Leon, Marly Gotti, our previous interns, and the tidyverse team.</p>
+<p>Special thanks to the other folks who contributed so much to tidymodels: Davis Vaughan, Julia Silge, Edgar Ruiz, Alison Hill, Desirée De Leon, our previous interns, and the tidyverse team.</p>
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
