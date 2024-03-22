@@ -924,7 +924,7 @@ tidy(lm_fit) %>% arrange(term)
 
 ```{r}
 #| label: fit-resamples
-#| code-line-numbers: "1|6|"
+#| code-line-numbers: "1|8-10|"
 val_rs <- validation_set(delivery_split)
 val_rs
 
