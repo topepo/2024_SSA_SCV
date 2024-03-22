@@ -12,7 +12,7 @@
 To prepare, you’ll need to do a few package installs: 
 
 ```r
-install.packages(c("Cubist", "tidymodels", "rules"))
+install.packages(c("Cubist", "splines2", "tidymodels", "rules"))
 ```
 
 At the time of this tutorial, we have been in the process of releasing a lot of packages. It’s alright if you have the previous versions though.
